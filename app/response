@@ -1,0 +1,240 @@
+{
+    "result": {
+        "activityInfo": [
+            {
+                "otherLabels": [
+                    {
+                        "type": 2,
+                        "highlight": 0,
+                        "name": "支持候补",
+                        "sort": 7
+                    }
+                ],
+                "styles": [
+                    "核"
+                ],
+                "sellIdentity": 1,
+                "city": "北京",
+                "title": "【抉择呈现】俄罗斯前卫金属核大团SHOKRAN 2025巡演北京站",
+                "activityPrice": "¥168起",
+                "labels": [],
+                "showTypeTagName": "Livehouse",
+                "activityId": 271953,
+                "rendered": 0,
+                "searchPerformer": [
+                    "SHOKRAN"
+                ],
+                "couponTicketViews": [],
+                "avatar": "https://s2.showstart.com/img/2025/0728/23/30/61358288f6164e2b9fe652e77d727d66_2000_2667_7241969.0x0.png?imageMogr2/thumbnail/!350x500r/gravity/Center/crop/!350x500",
+                "cityId": "10",
+                "isEnd": 0,
+                "showTime": "2025.09.21 周日 20:00",
+                "siteName": "乐空间",
+                "showTypeTagId": 34
+            },
+            {
+                "otherLabels": [
+                    {
+                        "type": 2,
+                        "highlight": 0,
+                        "name": "支持候补",
+                        "sort": 7
+                    }
+                ],
+                "styles": [
+                    "核"
+                ],
+                "sellIdentity": 1,
+                "city": "武汉",
+                "title": "【抉择呈现】俄罗斯前卫金属核大团SHOKRAN 2025巡演武汉站",
+                "activityPrice": "¥168起",
+                "labels": [],
+                "showTypeTagName": "Livehouse",
+                "activityId": 271951,
+                "rendered": 0,
+                "searchPerformer": [
+                    "SHOKRAN"
+                ],
+                "couponTicketViews": [],
+                "avatar": "https://s2.showstart.com/img/2025/0728/23/30/ce5c4d7449cb4b7197a41622a625a661_2000_2667_7257287.0x0.png?imageMogr2/thumbnail/!350x500r/gravity/Center/crop/!350x500",
+                "cityId": "27",
+                "isEnd": 0,
+                "showTime": "2025.09.17 周三 20:00",
+                "siteName": "武汉 ThreeLive",
+                "showTypeTagId": 34
+            },
+            {
+                "otherLabels": [
+                    {
+                        "type": 2,
+                        "highlight": 0,
+                        "name": "支持候补",
+                        "sort": 7
+                    }
+                ],
+                "styles": [
+                    "核"
+                ],
+                "sellIdentity": 1,
+                "city": "上海",
+                "title": "【抉择呈现】俄罗斯前卫金属核大团SHOKRAN 2025巡演上海站",
+                "activityPrice": "¥168起",
+                "labels": [],
+                "showTypeTagName": "Livehouse",
+                "activityId": 272917,
+                "rendered": 0,
+                "searchPerformer": [
+                    "SHOKRAN"
+                ],
+                "couponTicketViews": [],
+                "avatar": "https://s2.showstart.com/img/2025/0807/02/30/62e62dae7407428083574a84ab446626_2000_2667_7256009.0x0.png?imageMogr2/thumbnail/!350x500r/gravity/Center/crop/!350x500",
+                "cityId": "21",
+                "isEnd": 0,
+                "showTime": "2025.09.14 周日 20:00",
+                "siteName": "瓦肆 VAS ear（普陀沪西店）",
+                "showTypeTagId": 34
+            },
+            {
+                "otherLabels": [
+                    {
+                        "type": 2,
+                        "highlight": 0,
+                        "name": "支持候补",
+                        "sort": 7
+                    }
+                ],
+                "styles": [
+                    "核"
+                ],
+                "sellIdentity": 1,
+                "city": "杭州",
+                "title": "【抉择呈现】俄罗斯前卫金属核大团SHOKRAN 2025巡演杭州站",
+                "activityPrice": "¥168起",
+                "labels": [],
+                "showTypeTagName": "Livehouse",
+                "activityId": 271950,
+                "rendered": 0,
+                "searchPerformer": [
+                    "SHOKRAN"
+                ],
+                "couponTicketViews": [],
+                "avatar": "https://s2.showstart.com/img/2025/0728/23/00/00ac60e218f149cea0507a48e3d20e94_2000_2667_7276935.0x0.png?imageMogr2/thumbnail/!350x500r/gravity/Center/crop/!350x500",
+                "cityId": "571",
+                "isEnd": 0,
+                "showTime": "2025.09.16 周二 20:00",
+                "siteName": "LiveShop Uni由你现场",
+                "showTypeTagId": 34
+            },
+            {
+                "otherLabels": [
+                    {
+                        "type": 2,
+                        "highlight": 0,
+                        "name": "支持候补",
+                        "sort": 7
+                    }
+                ],
+                "styles": [
+                    "核"
+                ],
+                "sellIdentity": 1,
+                "city": "成都",
+                "title": "【抉择呈现】俄罗斯前卫金属核大团SHOKRAN 2025巡演成都站",
+                "activityPrice": "¥168起",
+                "labels": [],
+                "showTypeTagName": "Livehouse",
+                "activityId": 271949,
+                "rendered": 0,
+                "searchPerformer": [
+                    "SHOKRAN"
+                ],
+                "couponTicketViews": [],
+                "avatar": "https://s2.showstart.com/img/2025/0728/23/00/b46f75fe733841d08e2d440934364773_2000_2667_7283326.0x0.png?imageMogr2/thumbnail/!350x500r/gravity/Center/crop/!350x500",
+                "cityId": "28",
+                "isEnd": 0,
+                "showTime": "2025.09.13 周六 20:00",
+                "siteName": " LITTLES LIVE(小酒馆万象城店）",
+                "showTypeTagId": 34
+            },
+            {
+                "otherLabels": [
+                    {
+                        "type": 2,
+                        "highlight": 0,
+                        "name": "支持候补",
+                        "sort": 7
+                    }
+                ],
+                "styles": [
+                    "核"
+                ],
+                "sellIdentity": 1,
+                "city": "广州",
+                "title": "【抉择呈现】俄罗斯前卫金属核大团SHOKRAN 2025巡演广州站",
+                "activityPrice": "¥168起",
+                "labels": [],
+                "showTypeTagName": "Livehouse",
+                "activityId": 271952,
+                "rendered": 0,
+                "searchPerformer": [
+                    "SHOKRAN"
+                ],
+                "couponTicketViews": [],
+                "avatar": "https://s2.showstart.com/img/2025/0728/23/30/ecb551834b724e9b99f9896da85c170e_2000_2667_7257057.0x0.png?imageMogr2/thumbnail/!350x500r/gravity/Center/crop/!350x500",
+                "cityId": "20",
+                "isEnd": 0,
+                "showTime": "2025.09.19 周五 20:00",
+                "siteName": "SDlivehouse",
+                "showTypeTagId": 34
+            },
+            {
+                "otherLabels": [
+                    {
+                        "type": 2,
+                        "highlight": 0,
+                        "name": "支持候补",
+                        "sort": 7
+                    }
+                ],
+                "styles": [
+                    "核"
+                ],
+                "sellIdentity": 1,
+                "city": "深圳",
+                "title": "【抉择呈现】俄罗斯前卫金属核大团SHOKRAN 2025巡演深圳站",
+                "activityPrice": "¥168起",
+                "labels": [],
+                "showTypeTagName": "Livehouse",
+                "activityId": 272099,
+                "rendered": 0,
+                "searchPerformer": [
+                    "SHOKRAN"
+                ],
+                "couponTicketViews": [],
+                "avatar": "https://s2.showstart.com/img/2025/0730/11/30/68b9a852e7ed4f35a0bea439b02cfe22_2000_2667_7255070.0x0.png?imageMogr2/thumbnail/!350x500r/gravity/Center/crop/!350x500",
+                "cityId": "755",
+                "isEnd": 0,
+                "showTime": "2025.09.20 周六 20:00",
+                "siteName": "HOU LIVE 下沙店",
+                "showTypeTagId": 34
+            }
+        ],
+        "goodsInfo": [],
+        "userInfo": [
+            {
+                "fansNum": 1905,
+                "userType": 2,
+                "avatar": "https://s2.showstart.com/img/2019/20190909/43001c30230b4823be0237682ee7d084_426_426_339040.0x0.jpg",
+                "name": "SHOKRAN",
+                "fansAndHot": 20777,
+                "fine_score": 301.26933756446,
+                "id": 3021999,
+                "score": 1
+            }
+        ],
+        "userInfoIndex": 1
+    },
+    "state": "1",
+    "success": true,
+    "traceId": "tMDK7VwKjo8Ke8xUtbEAu1mGphRQljYV1754645873000"
+}
