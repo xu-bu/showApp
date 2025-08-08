@@ -25,7 +25,8 @@ export default function App() {
         const listConfig = getListConfig(keyword);
         await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
         res = await axios.request(listConfig);
-        setData(JSON.stringify(res.data, null, 2));
+        const parsedData = parseRes(res.data);
+        setData(JSON.stringify(parsedData, null, 2));
         setFetched(true); // 点击后隐藏按钮
       }
     } catch (err: any) {
@@ -71,3 +72,18 @@ const styles = StyleSheet.create({
     color: 'red',
   },
 });
+
+function parseRes(res: any) {
+    const activityInfo = res?.data?.result?.activityInfo || [];
+    const parseResult: any[] = [];
+    activityInfo.forEach((activity: any) => {
+        parseResult.push({
+            title: activity.title,
+            city: activity.city,
+            avatar: activity.avatar,
+            showTime: activity.showTime,
+            siteName: activity.siteName,
+        });
+    });
+    return parseResult;
+}
