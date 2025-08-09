@@ -1,33 +1,41 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { View, Button, ActivityIndicator, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Button, ActivityIndicator, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import ImageViewing from 'react-native-image-viewing';
 import { getTokenConfig, getListConfig } from './requestConfig';
 import { injectRequestConfig } from './injectRequestConfig';
+import { keywords } from './consts';
+
+interface ActivityData {
+  title: string;
+  city: string;
+  avatar: string;
+  showTime: string;
+  siteName: string;
+  artist: string;
+}
 
 export default function App() {
-  const [data, setData] = useState<string | null>(null);
+  const [data, setData] = useState<ActivityData[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [fetched, setFetched] = useState(false); // 用于控制按钮显示隐藏
-
+  const [visible, setVisible] = useState(false);
+  
   const fetchData = async () => {
     setLoading(true);
     setError(null);
     setData(null);
-
+    const parsedData: ActivityData[] = [];
     try {
-      const keywords = ['shokran'];
+      await injectRequestConfig(getTokenConfig, '/waf/gettoken', '');
+      let res = await axios.request(getTokenConfig);
+      const accessToken = res.data.result.accessToken.access_token;
       for (const keyword of keywords) {
-        await injectRequestConfig(getTokenConfig, '/waf/gettoken', '');
-        let res = await axios.request(getTokenConfig);
-        const accessToken = res.data.result.accessToken.access_token;
-
         const listConfig = getListConfig(keyword);
+
         await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
         res = await axios.request(listConfig);
-        const parsedData = parseRes(res.data);
-        setData(JSON.stringify(parsedData, null, 2));
-        setFetched(true); // 点击后隐藏按钮
+        parsedData.push(...parseRes(res.data, keyword));
       }
     } catch (err: any) {
       console.error('Error fetching data:', err);
@@ -35,55 +43,64 @@ export default function App() {
     } finally {
       setLoading(false);
     }
+    setData(parsedData);
   };
 
   return (
-    <View style={styles.container}>
-      {!fetched && <Button title="Fetch Data" onPress={fetchData} />}
+    <View style={{ flex: 1, padding: 16 }}>
+      <Button
+        title="Fetch Data"
+        onPress={fetchData}
+        disabled={loading}
+      />
 
-      {loading && <ActivityIndicator size="large" color="#007AFF" style={{ marginTop: 20 }} />}
+      {loading && (
+        <ActivityIndicator
+          size="large"
+          color="#007AFF"
+          style={{ marginTop: 20 }}
+        />
+      )}
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && (
+        <Text style={{ marginTop: 20, fontSize: 14, color: 'red' }}>
+          {error}
+        </Text>
+      )}
 
       {data && (
-        <ScrollView style={{ marginTop: 20, maxHeight: 300 }}>
-          <Text style={styles.text}>{data}</Text>
+        <ScrollView style={{ flex: 1, marginTop: 20 }}>
+          {data.map((item, index) => (
+            <View key={index} style={{ marginBottom: 20 }}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.title}</Text>
+              <Text>{item.city}</Text>
+              <Text>{item.showTime}</Text>
+              <Text>{item.siteName}</Text>
+              <Image
+                source={{ uri: item.avatar }}
+                style={{ width: 100, height: 100, borderRadius: 50, marginTop: 10 }}
+              />
+            </View>
+          ))}
         </ScrollView>
       )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    marginTop: 20,
-    fontSize: 14,
-    color: '#333',
-  },
-  error: {
-    marginTop: 20,
-    fontSize: 14,
-    color: 'red',
-  },
-});
-
-function parseRes(res: any) {
-    const activityInfo = res?.data?.result?.activityInfo || [];
-    const parseResult: any[] = [];
-    activityInfo.forEach((activity: any) => {
-        parseResult.push({
-            title: activity.title,
-            city: activity.city,
-            avatar: activity.avatar,
-            showTime: activity.showTime,
-            siteName: activity.siteName,
-        });
+function parseRes(res: any, keyword: string): ActivityData[] {
+  const activityInfo = res?.result?.activityInfo || [];
+  const parseResult: ActivityData[] = [];
+  activityInfo.forEach((activity: any) => {
+    parseResult.push({
+      artist: keyword,
+      title: activity.title,
+      city: activity.city,
+      avatar: activity.avatar,
+      showTime: activity.showTime,
+      siteName: activity.siteName,
     });
-    return parseResult;
+  });
+
+  return parseResult;
 }

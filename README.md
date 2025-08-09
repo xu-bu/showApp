@@ -1,3 +1,3 @@
 # How to run it
 
-`npm run tunnel`
+`npx expo login` to login your expo account then `npm run tunnel`
