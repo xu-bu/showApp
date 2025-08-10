@@ -5,6 +5,7 @@ import ImageViewing from 'react-native-image-viewing';
 import { getTokenConfig, getListConfig } from './requestConfig';
 import { injectRequestConfig } from './injectRequestConfig';
 import { keywords } from './consts';
+import { Picker } from '@react-native-picker/picker';
 
 interface ActivityData {
   title: string;
@@ -45,10 +46,18 @@ export default function App() {
     }
     setData(parsedData);
   };
+  // for cities filter
   const cities = useMemo(() => {
+    if (!data) return [];
     const allCities = data.map(item => item.city);
     return Array.from(new Set(allCities));
   }, [data]);
+  // pick cities
+  const filteredEventInfo = useMemo(() => {
+    if (!data) return [];                  // if null, return empty array
+    if (!selectedCity) return data;
+    return data.filter(item => item.city === selectedCity);
+  }, [data, selectedCity]);
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
@@ -72,9 +81,21 @@ export default function App() {
         </Text>
       )}
 
-      {data && (
+      {data && data.length > 0 && (
+        <Picker
+          selectedValue={selectedCity}
+          onValueChange={(itemValue) => setSelectedCity(itemValue)}
+        >
+          <Picker.Item label="All Cities" value="" />
+          {cities.map((city, idx) => (
+            <Picker.Item key={idx} label={city} value={city} />
+          ))}
+        </Picker>
+      )}
+
+      {filteredEventInfo && (
         <ScrollView style={{ flex: 1, marginTop: 20 }}>
-          {data.map((item, index) => (
+          {filteredEventInfo.map((item, index) => (
             <View key={index} style={{ marginBottom: 20 }}>
               <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.title}</Text>
               <Text>{item.artist}</Text>
