@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Button, ActivityIndicator, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 import { getTokenConfig, getListConfig } from './requestConfig';
@@ -19,8 +19,8 @@ export default function App() {
   const [data, setData] = useState<ActivityData[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [visible, setVisible] = useState(false);
-  
+  const [currentImage, setCurrentImage] = useState<{ uri: string } | null>(null);
+  const [selectedCity, setSelectedCity] = useState('');
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -45,6 +45,10 @@ export default function App() {
     }
     setData(parsedData);
   };
+  const cities = useMemo(() => {
+    const allCities = data.map(item => item.city);
+    return Array.from(new Set(allCities));
+  }, [data]);
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
@@ -73,17 +77,29 @@ export default function App() {
           {data.map((item, index) => (
             <View key={index} style={{ marginBottom: 20 }}>
               <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.title}</Text>
+              <Text>{item.artist}</Text>
               <Text>{item.city}</Text>
               <Text>{item.showTime}</Text>
               <Text>{item.siteName}</Text>
-              <Image
-                source={{ uri: item.avatar }}
-                style={{ width: 100, height: 100, borderRadius: 50, marginTop: 10 }}
-              />
+              <TouchableOpacity onPress={() => setCurrentImage({ uri: item.avatar })}>
+                <Image
+                  source={{ uri: item.avatar }}
+                  style={{ width: 100, height: 100, borderRadius: 50, marginTop: 10 }}
+                />
+              </TouchableOpacity>
+              {currentImage && (
+                <ImageViewing
+                  images={[currentImage]}
+                  imageIndex={0}
+                  visible={true}
+                  onRequestClose={() => setCurrentImage(null)}
+                />
+              )}
             </View>
           ))}
         </ScrollView>
       )}
+
     </View>
   );
 }
