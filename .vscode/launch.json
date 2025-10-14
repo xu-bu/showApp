@@ -4,10 +4,33 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Run current file with tsx",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "runtimeExecutable": "/home/carroll/.nvm/versions/node/v22.14.0/bin/npx",
+      "runtimeArgs": [
+        "tsx"
+      ],
+      "args": [
+        "${file}"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "REACT_SUPABASE_URL": "https://hvwxaosrktggteueukrr.supabase.co",
+        "REACT_SUPABASE_KEY": "sb_publishable_G1WXRjtngnQrbefKSqFnXQ_s0qNyQ9R"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Run npm run tunnel",
       "runtimeVersion": "22",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "tunnel"],
+      "runtimeArgs": [
+        "run",
+        "tunnel"
+      ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }

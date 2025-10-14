@@ -10,3 +10,10 @@ eas build --platform android --profile production
 '''
 
 this will use build.production in `eas.json` as config to build
+
+# How to configure env variable via eas
+```
+eas env:create --name SUPABASE_PUBLISHABLE_KEY --value [value]
+eas env:list production
+```
+To delete: `eas env:delete`
