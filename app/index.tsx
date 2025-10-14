@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { View, Button, ActivityIndicator, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 import { getTokenConfig, getListConfig } from './requestConfig';
 import { injectRequestConfig } from './injectRequestConfig';
-import { keywords } from './consts';
 import { Picker } from '@react-native-picker/picker';
+import { getItems } from './services/supabase';
 
 interface ActivityData {
   title: string;
@@ -23,6 +24,7 @@ export default function App() {
   const [currentImage, setCurrentImage] = useState<{ uri: string } | null>(null);
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedArtist, setSelectedArtist] = useState('');
+  const navigate = useNavigate()
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -32,7 +34,11 @@ export default function App() {
       await injectRequestConfig(getTokenConfig, '/waf/gettoken', '');
       let res = await axios.request(getTokenConfig);
       const accessToken = res.data.result.accessToken.access_token;
-      for (const keyword of keywords) {
+      const keywordDocs = await getItems()
+      const keyWords= keywordDocs[0].keyWords
+      
+      localStorage.setItem('keyWords', JSON.stringify(keyWords));
+      for (const keyword of keyWords) {
         const listConfig = getListConfig(keyword);
 
         await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
@@ -47,6 +53,9 @@ export default function App() {
     }
     setData(parsedData);
   };
+  async function manageKeywords() {
+    navigate('/manageKeywords')
+  }
   // for cities filter
   const cities = useMemo(() => {
     if (!data) return [];
@@ -76,6 +85,10 @@ export default function App() {
         title="Fetch Data"
         onPress={fetchData}
         disabled={loading}
+      />
+      <Button
+        title="Manage Keywords"
+        onPress={manageKeywords}
       />
 
       {loading && (
