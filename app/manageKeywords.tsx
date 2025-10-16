@@ -1,123 +1,243 @@
-import { useState, useEffect } from 'react';
-import { Trash2, Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { View, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { TextInput, Button, Card, Text, IconButton, Chip, Portal, Snackbar } from 'react-native-paper';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 
 export default function ListManager() {
-  let keyWords = JSON.parse(localStorage.getItem('keyWords')!);
-  const [items, setItems] = useState<string[]>(keyWords);
+  // Initialize with some sample data
+  const [items, setItems] = useState<string[]>(['Sample item 1', 'Sample item 2']);
   const [input, setInput] = useState<string>('');
-  const [isPageReady, setIsPageReady] = useState<boolean>(false);
-
-  // Page enter animation
-  useEffect(() => {
-    setIsPageReady(true);
-  }, []);
-
-  // Page leave animation setup
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      setIsPageReady(false);
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const addItem = () => {
-    const newKeyWord = input.trim()
+    const newKeyWord = input.trim();
 
     if (newKeyWord) {
-      keyWords.push(newKeyWord)
-      localStorage.setItem('keyWords', JSON.stringify(keyWords));
       setItems([...items, newKeyWord]);
       setInput('');
+      setSnackbarMessage('Item added! ✨');
+      setSnackbarVisible(true);
     }
   };
 
-  const removeItem = (newKeyWord: string) => {
-    keyWords=keyWords.filter(item => item !== newKeyWord)
-    setItems(items.filter(item => item.id !== id));
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      addItem();
-    }
+  const removeItem = (index: number) => {
+    const itemName = items[index];
+    setItems(items.filter((_, i) => i !== index));
+    setSnackbarMessage(`"${itemName}" removed`);
+    setSnackbarVisible(true);
   };
 
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8 transition-opacity duration-700 ${isPageReady ? 'opacity-100' : 'opacity-0'
-        }`}
-    >
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12 transform transition-all duration-1000 delay-100">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">My List</h1>
-          <p className="text-gray-600">Add and remove items seamlessly</p>
-        </div>
-
-        {/* Card Container */}
-        <div
-          className={`bg-white rounded-lg shadow-2xl p-8 transform transition-all duration-1000 delay-200 ${isPageReady ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-            }`}
+    <View style={styles.container}>
+      <StatusBar style="light" />
+      <LinearGradient
+        colors={['#667eea', '#764ba2', '#f093fb']}
+        style={styles.gradient}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}
         >
-          {/* Input Section */}
-          <div className="flex gap-2 mb-8">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Add a new item..."
-              className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors"
-            />
-            <button
-              onClick={addItem}
-              className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition-all hover:shadow-lg active:scale-95"
-            >
-              <Plus size={20} />
-              Add
-            </button>
-          </div>
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Header */}
+            <View style={styles.header}>
+              <Text variant="displaySmall" style={styles.title}>✨ My List</Text>
+              <Text variant="bodyLarge" style={styles.subtitle}>
+                Manage your items with style
+              </Text>
+            </View>
 
-          {/* List */}
-          <div className="space-y-3">
-            {items.length === 0 ? (
-              <div className="text-center py-12 text-gray-400">
-                <p className="text-lg">No items yet. Add one to get started!</p>
-              </div>
-            ) : (
-              items.map((item, idx) => (
-                <div
-                  key={item.id}
-                  className={`flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all duration-300 transform ${isPageReady
-                    ? 'translate-x-0 opacity-100'
-                    : 'translate-x-full opacity-0'
-                    }`}
-                  style={{
-                    transitionDelay: isPageReady ? `${200 + idx * 50}ms` : '0ms'
-                  }}
+            {/* Main Card */}
+            <Card style={styles.card} elevation={5}>
+              <Card.Content>
+                {/* Input Section */}
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    mode="outlined"
+                    label="Add new item"
+                    value={input}
+                    onChangeText={setInput}
+                    onSubmitEditing={addItem}
+                    returnKeyType="done"
+                    style={styles.input}
+                    outlineColor="#667eea"
+                    activeOutlineColor="#764ba2"
+                    right={
+                      <TextInput.Icon
+                        icon="plus-circle"
+                        onPress={addItem}
+                        disabled={!input.trim()}
+                      />
+                    }
+                  />
+                </View>
+
+                <Button
+                  mode="contained"
+                  onPress={addItem}
+                  disabled={!input.trim()}
+                  style={styles.addButton}
+                  buttonColor="#667eea"
+                  icon="plus"
+                  contentStyle={styles.addButtonContent}
                 >
-                  <span className="text-gray-800 font-medium">{item.text}</span>
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-all active:scale-90"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
+                  Add Item
+                </Button>
 
-          {/* Footer */}
-          <div className="mt-8 pt-6 border-t border-gray-200 text-center text-gray-500 text-sm">
-            <p>{items.length} item{items.length !== 1 ? 's' : ''} in your list</p>
-          </div>
-        </div>
-      </div>
-    </div>
+                {/* Items Count */}
+                <View style={styles.countContainer}>
+                  <Chip icon="format-list-bulleted" style={styles.chip}>
+                    {items.length} item{items.length !== 1 ? 's' : ''}
+                  </Chip>
+                </View>
+
+                {/* List */}
+                <View style={styles.listContainer}>
+                  {items.length === 0 ? (
+                    <Card style={styles.emptyCard} mode="outlined">
+                      <Card.Content style={styles.emptyContent}>
+                        <Text variant="bodyLarge" style={styles.emptyText}>
+                          No items yet. Add your first item to get started! 🚀
+                        </Text>
+                      </Card.Content>
+                    </Card>
+                  ) : (
+                    items.map((item, index) => (
+                      <Card
+                        key={index}
+                        style={styles.itemCard}
+                        mode="elevated"
+                        elevation={2}
+                      >
+                        <Card.Content style={styles.itemContent}>
+                          <Text variant="bodyLarge" style={styles.itemText}>{item}</Text>
+                          <IconButton
+                            icon="delete"
+                            iconColor="#e74c3c"
+                            size={24}
+                            onPress={() => removeItem(index)}
+                            style={styles.deleteButton}
+                          />
+                        </Card.Content>
+                      </Card>
+                    ))
+                  )}
+                </View>
+              </Card.Content>
+            </Card>
+          </ScrollView>
+        </KeyboardAvoidingView>
+
+        {/* Snackbar for notifications */}
+        <Portal>
+          <Snackbar
+            visible={snackbarVisible}
+            onDismiss={() => setSnackbarVisible(false)}
+            duration={2000}
+            action={{
+              label: 'OK',
+              onPress: () => setSnackbarVisible(false),
+            }}
+          >
+            {snackbarMessage}
+          </Snackbar>
+        </Portal>
+      </LinearGradient>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  gradient: {
+    flex: 1,
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    padding: 20,
+    paddingTop: 60,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  title: {
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 4,
+  },
+  subtitle: {
+    color: '#ffffff',
+    opacity: 0.9,
+  },
+  card: {
+    borderRadius: 16,
+    backgroundColor: '#ffffff',
+  },
+  inputContainer: {
+    marginBottom: 12,
+  },
+  input: {
+    backgroundColor: '#ffffff',
+  },
+  addButton: {
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  addButtonContent: {
+    height: 48,
+  },
+  countContainer: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  chip: {
+    backgroundColor: '#f0f0f0',
+  },
+  listContainer: {
+    gap: 12,
+  },
+  emptyCard: {
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    borderColor: '#cccccc',
+    backgroundColor: '#fafafa',
+  },
+  emptyContent: {
+    paddingVertical: 32,
+    alignItems: 'center',
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#999999',
+  },
+  itemCard: {
+    borderRadius: 12,
+    backgroundColor: '#f8f9ff',
+    marginBottom: 8,
+  },
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+  },
+  itemText: {
+    flex: 1,
+    color: '#333333',
+    fontWeight: '500',
+  },
+  deleteButton: {
+    margin: 0,
+  },
+});

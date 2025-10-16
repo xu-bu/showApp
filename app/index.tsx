@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigation } from '@react-navigation/native';
 import { View, Button, ActivityIndicator, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 import { getTokenConfig, getListConfig } from './requestConfig';
@@ -24,7 +24,6 @@ export default function App() {
   const [currentImage, setCurrentImage] = useState<{ uri: string } | null>(null);
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedArtist, setSelectedArtist] = useState('');
-  const navigate = useNavigate()
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -53,8 +52,9 @@ export default function App() {
     }
     setData(parsedData);
   };
+  const navigation = useNavigation();
   async function manageKeywords() {
-    navigate('/manageKeywords')
+    navigation.navigate('ManageKeywords'); 
   }
   // for cities filter
   const cities = useMemo(() => {
@@ -86,6 +86,7 @@ export default function App() {
         onPress={fetchData}
         disabled={loading}
       />
+      <div></div>
       <Button
         title="Manage Keywords"
         onPress={manageKeywords}
@@ -162,6 +163,7 @@ export default function App() {
     </View>
   );
 }
+
 
 function parseRes(res: any, keyword: string): ActivityData[] {
   const activityInfo = res?.result?.activityInfo || [];
