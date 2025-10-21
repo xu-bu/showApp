@@ -22,6 +22,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [currentImage, setCurrentImage] = useState<{ uri: string } | null>(null);
   const [selectedCity, setSelectedCity] = useState('');
+  const [selectedArtist, setSelectedArtist] = useState('');
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -52,12 +53,22 @@ export default function App() {
     const allCities = data.map(item => item.city);
     return Array.from(new Set(allCities));
   }, [data]);
-  // pick cities
+  // for artist filter
+  const artists = useMemo(() => {
+    if (!data) return [];
+    const allArtists = data.map(item => item.artist);
+    return Array.from(new Set(allArtists));
+  }, [data]);
+  // filter based on city and artist
   const filteredEventInfo = useMemo(() => {
-    if (!data) return [];                  // if null, return empty array
-    if (!selectedCity) return data;
-    return data.filter(item => item.city === selectedCity);
-  }, [data, selectedCity]);
+    if (!data) return [];
+    let filteredEvents = data;
+
+    if (selectedCity) filteredEvents = filteredEvents.filter(item => item.city === selectedCity);
+    if (selectedArtist) filteredEvents = filteredEvents.filter(item => item.artist === selectedArtist);
+
+    return filteredEvents;
+  }, [data, selectedCity, selectedArtist]);
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
@@ -82,15 +93,29 @@ export default function App() {
       )}
 
       {data && data.length > 0 && (
-        <Picker
-          selectedValue={selectedCity}
-          onValueChange={(itemValue) => setSelectedCity(itemValue)}
-        >
-          <Picker.Item label="All Cities" value="" />
-          {cities.map((city, idx) => (
-            <Picker.Item key={idx} label={city} value={city} />
-          ))}
-        </Picker>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Picker
+            selectedValue={selectedCity}
+            onValueChange={(itemValue) => setSelectedCity(itemValue)}
+            style={{ flex: 1 }}
+          >
+            <Picker.Item label="All Cities" value="" />
+            {cities.map((city, idx) => (
+              <Picker.Item key={idx} label={city} value={city} />
+            ))}
+          </Picker>
+
+          <Picker
+            selectedValue={selectedArtist}
+            onValueChange={(itemValue) => setSelectedArtist(itemValue)}
+            style={{ flex: 1 }}
+          >
+            <Picker.Item label="All Artists" value="" />
+            {artists.map((artist, idx) => (
+              <Picker.Item key={idx} label={artist} value={artist} />
+            ))}
+          </Picker>
+        </View>
       )}
 
       {filteredEventInfo && (
