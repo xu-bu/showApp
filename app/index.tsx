@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useMemo, useState } from 'react';
 import { View, Button, ActivityIndicator, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
-import ImageViewing from 'react-native-image-viewing';
+import ImageModal from "react-native-image-modal";
 import { getTokenConfig, getListConfig } from './requestConfig';
 import { injectRequestConfig } from './injectRequestConfig';
 import { keywords } from './consts';
@@ -109,11 +109,11 @@ export default function App() {
                 />
               </TouchableOpacity>
               {currentImage && (
-                <ImageViewing
-                  images={[currentImage]}
-                  imageIndex={0}
-                  visible={true}
-                  onRequestClose={() => setCurrentImage(null)}
+                <ImageModal
+                  // resizeMode="contain"
+                  // imageBackgroundColor="#000"
+                  // style={styles.thumbnail}
+                  source={{ uri: currentImage.uri }}
                 />
               )}
             </View>
