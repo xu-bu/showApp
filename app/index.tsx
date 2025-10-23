@@ -7,7 +7,8 @@ import { getTokenConfig, getListConfig } from './requestConfig';
 import { injectRequestConfig } from './injectRequestConfig';
 import { Picker } from '@react-native-picker/picker';
 import { getItems } from './services/supabase';
-
+import { RouterParams } from './router'
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 interface ActivityData {
   title: string;
   city: string;
@@ -34,8 +35,8 @@ export default function App() {
       let res = await axios.request(getTokenConfig);
       const accessToken = res.data.result.accessToken.access_token;
       const keywordDocs = await getItems()
-      const keyWords= keywordDocs[0].keyWords
-      
+      const keyWords = keywordDocs[0].keyWords
+
       localStorage.setItem('keyWords', JSON.stringify(keyWords));
       for (const keyword of keyWords) {
         const listConfig = getListConfig(keyword);
@@ -52,9 +53,9 @@ export default function App() {
     }
     setData(parsedData);
   };
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RouterParams>>();
   async function manageKeywords() {
-    navigation.navigate('ManageKeywords'); 
+    navigation.navigate('ManageKeywords');
   }
   // for cities filter
   const cities = useMemo(() => {
@@ -81,16 +82,10 @@ export default function App() {
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
-      <Button
-        title="Fetch Data"
-        onPress={fetchData}
-        disabled={loading}
-      />
-      <div></div>
-      <Button
-        title="Manage Keywords"
-        onPress={manageKeywords}
-      />
+      <View style={{ flexDirection: "row", gap: 8 }}>
+        <Button title="Fetch Data" onPress={fetchData} disabled={loading} />
+        <Button title="Manage Keywords" onPress={manageKeywords} />
+      </View>
 
       {loading && (
         <ActivityIndicator

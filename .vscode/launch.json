@@ -4,7 +4,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Run current file with tsx",
+      "name": "run ts",
       "skipFiles": [
         "<node_internals>/**"
       ],

@@ -21,3 +21,7 @@ eas env:create --name SUPABASE_PUBLISHABLE_KEY --value [value]
 eas env:list production
 ```
 To delete: `eas env:delete`
+
+# How to maintain it
+`npx expo install --fix` to upgrade all packages
+`npx expo-doctor` to check
