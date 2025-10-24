@@ -4,8 +4,9 @@ import { View, Button, ActivityIndicator, Text, ScrollView, Image, TouchableOpac
 import ImageModal from "react-native-image-modal";
 import { getTokenConfig, getListConfig } from './requestConfig';
 import { injectRequestConfig } from './injectRequestConfig';
-import { keywords } from './consts';
 import { Picker } from '@react-native-picker/picker';
+// import { getItems } from './services/supabase';
+import { useRouter, Link } from 'expo-router';
 
 interface ActivityData {
   title: string;
@@ -17,6 +18,7 @@ interface ActivityData {
 }
 
 export default function App() {
+  const router = useRouter();
   const [data, setData] = useState<ActivityData[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,13 +34,17 @@ export default function App() {
       await injectRequestConfig(getTokenConfig, '/waf/gettoken', '');
       let res = await axios.request(getTokenConfig);
       const accessToken = res.data.result.accessToken.access_token;
-      for (const keyword of keywords) {
-        const listConfig = getListConfig(keyword);
+      // const keywordDocs = await getItems()
+      // const keyWords = keywordDocs[0].keyWords
 
-        await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
-        res = await axios.request(listConfig);
-        parsedData.push(...parseRes(res.data, keyword));
-      }
+      // localStorage.setItem('keyWords', JSON.stringify(keyWords));
+      // for (const keyword of keyWords) {
+      //   const listConfig = getListConfig(keyword);
+
+      //   await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
+      //   res = await axios.request(listConfig);
+      //   parsedData.push(...parseRes(res.data, keyword));
+      // }
     } catch (err: any) {
       console.error('Error fetching data:', err);
       setError('Failed to fetch');
@@ -47,6 +53,9 @@ export default function App() {
     }
     setData(parsedData);
   };
+  async function manageKeywords() {
+    router.push('/manageKeywords');
+  }
   // for cities filter
   const cities = useMemo(() => {
     if (!data) return [];
@@ -72,11 +81,10 @@ export default function App() {
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
-      <Button
-        title="Fetch Data"
-        onPress={fetchData}
-        disabled={loading}
-      />
+      <View style={{ flexDirection: "row", gap: 8 }}>
+        <Button title="Fetch Data" onPress={fetchData} disabled={loading} />
+        <Button title="Manage Keywords" onPress={manageKeywords} />
+      </View>
 
       {loading && (
         <ActivityIndicator
@@ -96,7 +104,7 @@ export default function App() {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Picker
             selectedValue={selectedCity}
-            onValueChange={(itemValue) => setSelectedCity(itemValue)}
+            onValueChange={(itemValue: any) => setSelectedCity(itemValue)}
             style={{ flex: 1 }}
           >
             <Picker.Item label="All Cities" value="" />
@@ -107,7 +115,7 @@ export default function App() {
 
           <Picker
             selectedValue={selectedArtist}
-            onValueChange={(itemValue) => setSelectedArtist(itemValue)}
+            onValueChange={(itemValue: any) => setSelectedArtist(itemValue)}
             style={{ flex: 1 }}
           >
             <Picker.Item label="All Artists" value="" />
@@ -149,6 +157,7 @@ export default function App() {
     </View>
   );
 }
+
 
 function parseRes(res: any, keyword: string): ActivityData[] {
   const activityInfo = res?.result?.activityInfo || [];
