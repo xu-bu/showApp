@@ -1,4 +1,3 @@
-// App.tsx
 import { NavigationContainer } from '@react-navigation/native';
 import RootNavigator from './_layout';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

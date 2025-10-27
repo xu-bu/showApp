@@ -1,13 +1,13 @@
 import axios from 'axios';
 import React, { useMemo, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { View, Button, ActivityIndicator, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import ImageModal from "react-native-image-modal";
 import { getTokenConfig, getListConfig } from './requestConfig';
 import { injectRequestConfig } from './injectRequestConfig';
 import { Picker } from '@react-native-picker/picker';
-// import { getItems } from './services/supabase';
-import { useRouter, Link } from 'expo-router';
+import { getKeyWords } from './services/supabase';
+import { useRouter } from 'expo-router';
+import storage from './storage';
 
 interface ActivityData {
   title: string;
@@ -35,17 +35,19 @@ export default function App() {
       await injectRequestConfig(getTokenConfig, '/waf/gettoken', '');
       let res = await axios.request(getTokenConfig);
       const accessToken = res.data.result.accessToken.access_token;
-      // const keywordDocs = await getItems()
-      // const keyWords = keywordDocs[0].keyWords
+      let keyWords = storage.getItem('keyWords')
+      
+      if (!keyWords) {
+        await getKeyWords();
+        storage.setItem('keyWords', keyWords);
+      }
+      for (const keyword of keyWords) {
+        const listConfig = getListConfig(keyword);
 
-      // localStorage.setItem('keyWords', JSON.stringify(keyWords));
-      // for (const keyword of keyWords) {
-      //   const listConfig = getListConfig(keyword);
-
-      //   await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
-      //   res = await axios.request(listConfig);
-      //   parsedData.push(...parseRes(res.data, keyword));
-      // }
+        await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
+        res = await axios.request(listConfig);
+        parsedData.push(...parseRes(res.data, keyword));
+      }
     } catch (err: any) {
       console.error('Error fetching data:', err);
       setError('Failed to fetch');
