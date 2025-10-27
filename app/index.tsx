@@ -6,9 +6,9 @@ import ImageModal from "react-native-image-modal";
 import { getTokenConfig, getListConfig } from './requestConfig';
 import { injectRequestConfig } from './injectRequestConfig';
 import { Picker } from '@react-native-picker/picker';
-import { getItems } from './services/supabase';
-import { RouterParams } from './router'
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+// import { getItems } from './services/supabase';
+import { useRouter, Link } from 'expo-router';
+
 interface ActivityData {
   title: string;
   city: string;
@@ -19,6 +19,7 @@ interface ActivityData {
 }
 
 export default function App() {
+  const router = useRouter();
   const [data, setData] = useState<ActivityData[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,17 +35,17 @@ export default function App() {
       await injectRequestConfig(getTokenConfig, '/waf/gettoken', '');
       let res = await axios.request(getTokenConfig);
       const accessToken = res.data.result.accessToken.access_token;
-      const keywordDocs = await getItems()
-      const keyWords = keywordDocs[0].keyWords
+      // const keywordDocs = await getItems()
+      // const keyWords = keywordDocs[0].keyWords
 
-      localStorage.setItem('keyWords', JSON.stringify(keyWords));
-      for (const keyword of keyWords) {
-        const listConfig = getListConfig(keyword);
+      // localStorage.setItem('keyWords', JSON.stringify(keyWords));
+      // for (const keyword of keyWords) {
+      //   const listConfig = getListConfig(keyword);
 
-        await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
-        res = await axios.request(listConfig);
-        parsedData.push(...parseRes(res.data, keyword));
-      }
+      //   await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
+      //   res = await axios.request(listConfig);
+      //   parsedData.push(...parseRes(res.data, keyword));
+      // }
     } catch (err: any) {
       console.error('Error fetching data:', err);
       setError('Failed to fetch');
@@ -53,9 +54,8 @@ export default function App() {
     }
     setData(parsedData);
   };
-  const navigation = useNavigation<NativeStackNavigationProp<RouterParams>>();
   async function manageKeywords() {
-    navigation.navigate('ManageKeywords');
+    router.push('/manageKeywords');
   }
   // for cities filter
   const cities = useMemo(() => {
@@ -105,7 +105,7 @@ export default function App() {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Picker
             selectedValue={selectedCity}
-            onValueChange={(itemValue) => setSelectedCity(itemValue)}
+            onValueChange={(itemValue: any) => setSelectedCity(itemValue)}
             style={{ flex: 1 }}
           >
             <Picker.Item label="All Cities" value="" />
@@ -116,7 +116,7 @@ export default function App() {
 
           <Picker
             selectedValue={selectedArtist}
-            onValueChange={(itemValue) => setSelectedArtist(itemValue)}
+            onValueChange={(itemValue: any) => setSelectedArtist(itemValue)}
             style={{ flex: 1 }}
           >
             <Picker.Item label="All Artists" value="" />
