@@ -25,3 +25,4 @@ To delete: `eas env:delete`
 # How to maintain it
 `npx expo install --fix` to upgrade all packages
 `npx expo-doctor` to check
+To add routes, modify `_layout.tsx`

@@ -1,17 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from '.'
-import ManageKeywords from './manageKeywords'
+// App.tsx
+import { NavigationContainer } from '@react-navigation/native';
+import RootNavigator from './_layout';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
-function App() {
+export default function App() {
   return (
-    <Router>
-      <Routes>
-        {/* file name is the path (index -> /)*/}
-        <Route element={<Home />} />
-        <Route element={<ManageKeywords />} />
-      </Routes>
-    </Router>
-  )
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
+      <StatusBar style="auto" />
+    </SafeAreaProvider>
+  );
 }
-
-export default App
