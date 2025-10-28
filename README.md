@@ -1,5 +1,5 @@
 # How to run it
-
+Note fetch won't work on web since on web Crypto.digestStringAsync doesn't support MD5
 ## For web
 `npx expo start` or `npm expo start -c` if wanna clear cache
 
@@ -17,7 +17,7 @@ this will use build.production in `eas.json` as config to build
 
 # How to configure env variable via eas
 ```
-eas env:create --name SUPABASE_PUBLISHABLE_KEY --value [value]
+eas env:create --name EXPO_PUBLIC_SUPABASE_URL --value [value]
 eas env:list production
 ```
 To delete: `eas env:delete`
