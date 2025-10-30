@@ -35,7 +35,7 @@ export default function App() {
       await injectRequestConfig(getTokenConfig, '/waf/gettoken', '');
       let res = await axios.request(getTokenConfig);
       const accessToken = res.data.result.accessToken.access_token;
-      let keyWords = storage.getItem('keyWords')
+      let keyWords = storage.getItem('keyWords')!
       
       if (!keyWords) {
         await getKeyWords();
