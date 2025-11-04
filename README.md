@@ -24,8 +24,7 @@ npm run release
 this will use build.production in `eas.json` as config to build
 
 # How to maintain it
-To delete env var: `npm run delete`
-
+To add env, just add it to `.env` then release, deploy.sh will auto inject it
 `npx expo install --fix` to upgrade all packages
 `npx expo-doctor` to check
 To add routes, modify `_layout.tsx`

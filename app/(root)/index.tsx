@@ -8,6 +8,8 @@ import { getKeyWords } from '../services/supabase';
 import { useRouter } from 'expo-router';
 import storage from '../services/storage';
 import { request } from '../services/request';
+import _ from 'lodash'
+import { CONCURRENT_REQUESTS_NUM } from '../consts'
 
 interface ActivityData {
   title: string;
@@ -41,12 +43,17 @@ export default function App() {
         keyWords = await getKeyWords();
         storage.setItem('keyWords', keyWords);
       }
-      for (const keyword of keyWords) {
-        const listConfig = getListConfig(keyword);
 
-        await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
-        res = await request(listConfig);
-        parsedData.push(...parseRes(res.data, keyword));
+      const keyWorksChunks = _.chunk(keyWords, CONCURRENT_REQUESTS_NUM);
+
+      for (const keyWordChunk of keyWorksChunks) {
+        await Promise.all(keyWordChunk.map(async (keyword) => {
+          const listConfig = getListConfig(keyword);
+
+          injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
+          res = await request(listConfig);
+          parsedData.push(...parseRes(res.data, keyword));
+        }))
       }
     } catch (err: any) {
       console.error('Error fetching data:', err);

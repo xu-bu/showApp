@@ -6,7 +6,7 @@ const deviceInfo = "%7B%22vendorName%22:%22%22,%22deviceMode%22:%22iPhone%22,%22
 const localToken = getRandStr(32)
 
 
-export async function injectRequestConfig(config: { method?: string; maxBodyLength?: number; url?: string; data: any; headers?: any; }, sourceURL: string, accessToken: string) {
+export function injectRequestConfig(config: { method?: string; maxBodyLength?: number; url?: string; data: any; headers?: any; }, sourceURL: string, accessToken: string) {
     // inherit template headers at first then compute extra properties
     config.headers = headers;
     headers['cusat'] = accessToken;
