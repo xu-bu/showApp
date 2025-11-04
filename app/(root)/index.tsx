@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import { View, Button, ActivityIndicator, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
-import ImageModal from "react-native-image-modal";
 import { getTokenConfig, getListConfig } from '../requestConfig';
 import { injectRequestConfig } from '../injectRequestConfig';
 import { Picker } from '@react-native-picker/picker';
@@ -10,6 +9,8 @@ import storage from '../services/storage';
 import { request } from '../services/request';
 import _ from 'lodash'
 import { CONCURRENT_REQUESTS_NUM } from '../consts'
+import { PickerStyles } from '../styles/styles'
+import ModalImage from "react-modal-image";
 
 interface ActivityData {
   title: string;
@@ -111,11 +112,11 @@ export default function App() {
       )}
 
       {data && data.length > 0 && (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <View style={PickerStyles.pickerContainer}>
           <Picker
             selectedValue={selectedCity}
             onValueChange={(itemValue: any) => setSelectedCity(itemValue)}
-            style={{ flex: 1 }}
+            style={PickerStyles.picker}
           >
             <Picker.Item label="All Cities" value="" />
             {cities.map((city, idx) => (
@@ -126,7 +127,7 @@ export default function App() {
           <Picker
             selectedValue={selectedArtist}
             onValueChange={(itemValue: any) => setSelectedArtist(itemValue)}
-            style={{ flex: 1 }}
+            style={PickerStyles.picker}
           >
             <Picker.Item label="All Artists" value="" />
             {artists.map((artist, idx) => (
@@ -145,18 +146,17 @@ export default function App() {
               <Text>{item.city}</Text>
               <Text>{item.showTime}</Text>
               <Text>{item.siteName}</Text>
-              <TouchableOpacity onPress={() => setCurrentImage({ uri: item.avatar })}>
+              <TouchableOpacity onPress={() => { setCurrentImage({ uri: item.avatar }); }}>
                 <Image
                   source={{ uri: item.avatar }}
                   style={{ width: 100, height: 100, borderRadius: 50, marginTop: 10 }}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity >
               {currentImage && (
-                <ImageModal
-                  // resizeMode="contain"
-                  // imageBackgroundColor="#000"
-                  // style={styles.thumbnail}
-                  source={{ uri: currentImage.uri }}
+                <ModalImage
+                  small={currentImage.uri}
+                  large={currentImage.uri}
+                  alt=""
                 />
               )}
             </View>

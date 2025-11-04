@@ -89,3 +89,27 @@ export const ManageKeywordsStyles = StyleSheet.create({
     margin: 0,
   },
 });
+
+export const PickerStyles = StyleSheet.create({
+  pickerContainer: {
+    marginTop: 16,
+    gap: 12,
+    marginBottom: 16,
+  },
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 12,
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  picker: {
+    height: 54,
+    paddingHorizontal: 12,
+  },
+});

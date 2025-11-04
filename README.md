@@ -8,7 +8,7 @@ Note fetch won't work on web since on web Crypto.digestStringAsync doesn't suppo
 
 # How to release
 ## For web:
-`./deploy.sh` then check github pages
+Run `./deploy.sh` then check github pages
 ## For android:
 First add env var:
 ```
@@ -24,7 +24,7 @@ npm run release
 this will use build.production in `eas.json` as config to build
 
 # How to maintain it
-To add env, just add it to `.env` then release, deploy.sh will auto inject it
+To add env, just add it to `.env` then release, deploy.sh will auto inject it`
 `npx expo install --fix` to upgrade all packages
 `npx expo-doctor` to check
 To add routes, modify `_layout.tsx`
