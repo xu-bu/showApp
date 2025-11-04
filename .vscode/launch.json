@@ -45,6 +45,17 @@
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "Debug Expo Web",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:8081",
+      "webRoot": "${workspaceFolder}",
+      // "sourceMapPathOverrides": {
+      //   "webpack://?:*/*": "${webRoot}/*",
+      //   "webpack:///./~/*": "${webRoot}/node_modules/*"
+      // }
     }
   ]
 }

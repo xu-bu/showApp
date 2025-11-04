@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { View, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
-import { TextInput, Button, Card, Text, IconButton, Chip, Portal, Snackbar, Provider } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StatusBar } from 'expo-status-bar';
-import { getKeyWords, updateItem } from './services/supabase';
-import storage from './storage';
-import { ManageKeywordsStyles } from './styles/styles';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { Button, Card, Chip, IconButton, Portal, Provider, Snackbar, Text, TextInput } from 'react-native-paper';
+import storage from './services/storage';
+import { getKeyWords, updateItem } from './services/supabase';
+import { ManageKeywordsStyles } from './styles/styles';
 
 export default function ManageKeywords() {
   const [keyWords, setKeyWords] = useState<string[]>(storage.getItem('keyWords')!);

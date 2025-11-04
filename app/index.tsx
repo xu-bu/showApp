@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useMemo, useState } from 'react';
 import { View, Button, ActivityIndicator, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import ImageModal from "react-native-image-modal";
@@ -7,7 +6,8 @@ import { injectRequestConfig } from './injectRequestConfig';
 import { Picker } from '@react-native-picker/picker';
 import { getKeyWords } from './services/supabase';
 import { useRouter } from 'expo-router';
-import storage from './storage';
+import storage from './services/storage';
+import { request } from './services/request';
 
 interface ActivityData {
   title: string;
@@ -33,24 +33,24 @@ export default function App() {
     const parsedData: ActivityData[] = [];
     try {
       await injectRequestConfig(getTokenConfig, '/waf/gettoken', '');
-      let res = await axios.request(getTokenConfig);
+      let res = await request(getTokenConfig);
       const accessToken = res.data.result.accessToken.access_token;
       let keyWords = storage.getItem('keyWords')!
-      
+
       if (!keyWords) {
-        await getKeyWords();
+        keyWords = await getKeyWords();
         storage.setItem('keyWords', keyWords);
       }
       for (const keyword of keyWords) {
         const listConfig = getListConfig(keyword);
 
         await injectRequestConfig(listConfig, '/wap/activity/list', accessToken);
-        res = await axios.request(listConfig);
+        res = await request(listConfig);
         parsedData.push(...parseRes(res.data, keyword));
       }
     } catch (err: any) {
       console.error('Error fetching data:', err);
-      setError('Failed to fetch');
+      setError(JSON.stringify(err));
     } finally {
       setLoading(false);
     }
