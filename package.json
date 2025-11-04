@@ -12,7 +12,8 @@
     "lint": "expo lint",
     "release": "eas build --platform android --profile production",
     "list": "eas env:list production",
-    "delete": "eas env:delete"
+    "delete": "eas env:delete",
+    "deploy": "gh-pages -d dist -t"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -63,6 +64,7 @@
     "@types/react-router-dom": "^5.3.3",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
+    "gh-pages": "^6.3.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",
     "typescript": "~5.8.3"

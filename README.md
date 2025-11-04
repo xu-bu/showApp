@@ -7,6 +7,9 @@ Note fetch won't work on web since on web Crypto.digestStringAsync doesn't suppo
 `npx expo login` to login your expo account then `npm run tunnel`, QR code will be generated there. Open expo app then scan it.
 
 # How to release
+## For web:
+`./deploy.sh` then check github pages
+## For android:
 First add env var:
 ```
 eas env:create --name EXPO_PUBLIC_SUPABASE_URL --value [value]
@@ -15,7 +18,7 @@ Check it: `npm run list`
 Then release
 ```
 npm install -g eas-cli
-eas build --platform android --profile production
+npm run release
 ```
 
 this will use build.production in `eas.json` as config to build

@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { View, Button, ActivityIndicator, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import ImageModal from "react-native-image-modal";
-import { getTokenConfig, getListConfig } from './requestConfig';
-import { injectRequestConfig } from './injectRequestConfig';
+import { getTokenConfig, getListConfig } from '../requestConfig';
+import { injectRequestConfig } from '../injectRequestConfig';
 import { Picker } from '@react-native-picker/picker';
-import { getKeyWords } from './services/supabase';
+import { getKeyWords } from '../services/supabase';
 import { useRouter } from 'expo-router';
-import storage from './services/storage';
-import { request } from './services/request';
+import storage from '../services/storage';
+import { request } from '../services/request';
 
 interface ActivityData {
   title: string;
