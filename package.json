@@ -46,6 +46,7 @@
     "lucide-react-native": "^0.545.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-medium-image-zoom": "^5.4.0",
     "react-modal-image": "^2.6.0",
     "react-native": "0.79.6",
     "react-native-gesture-handler": "~2.24.0",
@@ -55,7 +56,8 @@
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
     "react-native-web": "~0.20.0",
-    "react-native-webview": "13.13.5"
+    "react-native-webview": "13.13.5",
+    "yet-another-react-lightbox": "^3.25.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
