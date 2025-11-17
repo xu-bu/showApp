@@ -2,8 +2,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { Button, Card, Chip, IconButton, Portal, Provider, Snackbar, Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, View, TouchableOpacity } from 'react-native';
+import { Button, Card, Chip, Portal, Provider, Snackbar, Text, TextInput, Icon } from 'react-native-paper';
 import storage from './services/storage';
 import { getKeyWords, updateItem } from './services/supabase';
 import { ManageKeywordsStyles } from './styles/styles';
@@ -131,7 +131,7 @@ function ListManager({ keyWords }: { keyWords: string[] }) {
                 style={ManageKeywordsStyles.addButton}
                 buttonColor='#ffffff'
                 textColor='#000000'
-                >back</Button>
+              >back</Button>
 
               {/* Main Card */}
               <Card style={ManageKeywordsStyles.card} elevation={5}>
@@ -199,14 +199,14 @@ function ListManager({ keyWords }: { keyWords: string[] }) {
                         >
                           <Card.Content style={ManageKeywordsStyles.itemContent}>
                             <Text variant="bodyLarge" style={ManageKeywordsStyles.itemText}>{item}</Text>
-                            <IconButton
-                              icon="delete"
-                              iconColor="#e74c3c"
-                              size={24}
+                            <TouchableOpacity
                               onPress={() => removeItem(index)}
                               disabled={isProcessing}
                               style={ManageKeywordsStyles.deleteButton}
-                            />
+                              activeOpacity={0.6}
+                            >
+                              <Icon source="delete" color="#e74c3c" size={24} />
+                            </TouchableOpacity>
                           </Card.Content>
                         </Card>
                       ))
