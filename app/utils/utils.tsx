@@ -1,11 +1,6 @@
-import * as Crypto from 'expo-crypto';
-
-export async function getMD5(str: string) {
-  const hash = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.MD5,
-    str
-  );
-  return hash;
+import CryptoJS from 'crypto-js';
+export function getMD5(text: string): string {
+  return CryptoJS.MD5(text).toString();
 }
 
 export function getRandStr(length: number) {
@@ -16,3 +11,6 @@ export function getRandStr(length: number) {
   }
   return result;
 }
+
+
+

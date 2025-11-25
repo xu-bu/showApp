@@ -6,9 +6,9 @@ const deviceInfo = "%7B%22vendorName%22:%22%22,%22deviceMode%22:%22iPhone%22,%22
 const localToken = getRandStr(32)
 
 
-export async function injectRequestConfig(config: { method?: string; maxBodyLength?: number; url?: string; data: any; headers?: any; }, sourceURL: string, accessToken: string) {
+export function injectRequestConfig(config: { method?: string; maxBodyLength?: number; url?: string; data: any; headers?: any; }, sourceURL: string, accessToken: string) {
+    // inherit template headers at first then compute extra properties
     config.headers = headers;
-
     headers['cusat'] = accessToken;
     headers["cusut"] = "nil"
     headers["cusid"] = "0"
@@ -23,10 +23,12 @@ export async function injectRequestConfig(config: { method?: string; maxBodyLeng
     headers["crtraceid"] = `${getRandStr(32)}${now * 1000}`
     headers["ctrackpath"] = ""
     headers["csourcepath"] = ""
+
     const jsonBody = JSON.stringify(config.data);
     const str = accessToken + '0wap' + localToken + jsonBody +
         sourceURL + '997' + 'wap' + headers['crtraceid'];
-    headers['crpsign'] = await getMD5(str);
+
+    headers['crpsign'] = getMD5(str);
 
     return headers;
 }
