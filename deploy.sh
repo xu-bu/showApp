@@ -1,10 +1,4 @@
 #!/bin/bash
-
-echo ""
-echo "================================"
-echo "🚀 Starting Deployment"
-echo "================================"
-
 # Get repo name from git remote
 REPO_NAME=$(basename -s .git $(git config --get remote.origin.url))
 
@@ -15,10 +9,6 @@ echo ""
 # Export the web build
 echo "📱 Exporting Expo web build..."
 npx expo export --platform web
-
-# Add .nojekyll to prevent Jekyll processing
-echo "📝 Adding .nojekyll..."
-touch dist/.nojekyll
 
 # Deploy to gh-pages branch
 echo "🌐 Deploying to GitHub Pages..."
