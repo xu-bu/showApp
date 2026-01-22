@@ -2,11 +2,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, View, TouchableOpacity } from 'react-native';
-import { Button, Card, Chip, Portal, Provider, Snackbar, Text, TextInput, Icon } from 'react-native-paper';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, View, TouchableOpacity,Pressable } from 'react-native';
+import { Button, Card, Chip, Portal, Provider, Snackbar, Text, TextInput } from 'react-native-paper';
 import storage from './services/storage';
 import { getKeyWords, updateItem } from './services/supabase';
 import { ManageKeywordsStyles } from './styles/styles';
+import { Trash2 } from 'lucide-react-native';
 
 export default function ManageKeywords() {
   const [keyWords, setKeyWords] = useState<string[]>(storage.getItem('keyWords')!);
@@ -126,8 +127,8 @@ function ListManager({ keyWords }: { keyWords: string[] }) {
               showsVerticalScrollIndicator={false}
             >
               {/* Header */}
-              <Button onPress={() => router.back()}
-                mode="contained"
+              <Button onPress={() => router.replace('/')}
+                mode="contained"  
                 style={ManageKeywordsStyles.addButton}
                 buttonColor='#ffffff'
                 textColor='#000000'
@@ -190,26 +191,36 @@ function ListManager({ keyWords }: { keyWords: string[] }) {
                         </Card.Content>
                       </Card>
                     ) : (
-                      items.map((item, index) => (
-                        <Card
-                          key={`${item}-${index}`}
-                          style={ManageKeywordsStyles.itemCard}
-                          mode="elevated"
-                          elevation={2}
-                        >
-                          <Card.Content style={ManageKeywordsStyles.itemContent}>
-                            <Text variant="bodyLarge" style={ManageKeywordsStyles.itemText}>{item}</Text>
-                            <TouchableOpacity
-                              onPress={() => removeItem(index)}
-                              disabled={isProcessing}
-                              style={ManageKeywordsStyles.deleteButton}
-                              activeOpacity={0.6}
-                            >
-                              <Icon source="delete" color="#e74c3c" size={24} />
-                            </TouchableOpacity>
-                          </Card.Content>
-                        </Card>
-                      ))
+                        items.map((item, index) => (
+                          <Pressable key={`${item}-${index}`}>
+                            {({ hovered }) => (
+                              <Card
+                                style={[
+                                  ManageKeywordsStyles.itemCard,
+                                  hovered && { backgroundColor: '#e3f2fd' } // Obvious color change
+                                ]}
+                                // how high this card looks like
+                                // elevation to control level, 5 is highest
+                                mode="elevated"
+                                elevation={2}  // Changes on hover!
+                              >
+                                <Card.Content style={ManageKeywordsStyles.itemContent}>
+                                  <Text variant="bodyLarge" style={ManageKeywordsStyles.itemText}>
+                                    {item}  
+                                  </Text>
+                                  <TouchableOpacity
+                                    onPress={() => removeItem(index)} 
+                                    disabled={isProcessing}  
+                                    style={ManageKeywordsStyles.deleteButton}
+                                    activeOpacity={0.6}
+                                  >
+                                    <Trash2 size={24} color="#e74c3c" />
+                                  </TouchableOpacity>
+                                </Card.Content>
+                              </Card>
+                            )}
+                          </Pressable>
+                        ))
                     )}
                   </View>
                 </Card.Content>
