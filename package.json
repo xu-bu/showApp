@@ -13,7 +13,7 @@
     "release": "eas build --platform android --profile production",
     "list": "eas env:list production",
     "delete": "eas env:delete",
-    "deploy": "gh-pages -d dist -t"
+    "deploy": "npx expo export --platform web & gh-pages -d dist -t"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

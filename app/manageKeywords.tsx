@@ -7,6 +7,7 @@ import { Button, Card, Chip, Portal, Provider, Snackbar, Text, TextInput, Icon }
 import storage from './services/storage';
 import { getKeyWords, updateItem } from './services/supabase';
 import { ManageKeywordsStyles } from './styles/styles';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ManageKeywords() {
   const [keyWords, setKeyWords] = useState<string[]>(storage.getItem('keyWords')!);
@@ -205,7 +206,8 @@ function ListManager({ keyWords }: { keyWords: string[] }) {
                               style={ManageKeywordsStyles.deleteButton}
                               activeOpacity={0.6}
                             >
-                              <Icon source="delete" color="#e74c3c" size={24} />
+                              {/* 使用 Ionicons 的 iOS 风格关闭图标 */}
+                              <Ionicons name="close-circle" size={24} color="#e74c3c" />
                             </TouchableOpacity>
                           </Card.Content>
                         </Card>
