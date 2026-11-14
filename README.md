@@ -36,3 +36,64 @@ To add env, just add it to `.env` then release, deploy.sh will auto inject it
 `npx expo install --fix` to upgrade all packages
 `npx expo-doctor` to check
 To add routes, modify `_layout.tsx`
+
+# Native Kotlin Android app
+
+`android/` is a Jetpack Compose port of the web app: same showstart token/list
+requests (with request signing), Supabase keyword sync, city/artist filters,
+image zoom and keyword management.
+
+## Build locally
+
+Requires JDK 17 and Android SDK platform 36. Point Gradle at the SDK with
+`ANDROID_HOME` or `android/local.properties` (`sdk.dir=...`).
+
+```bash
+cd android
+SUPABASE_URL=... SUPABASE_KEY=... ./gradlew :app:assembleRelease
+```
+
+The APK is written to `android/app/build/outputs/apk/release/app-release.apk`.
+Set `API_GATEWAY_URL` to route requests through the same gateway as the web app;
+when empty the app calls `wap.showstart.com` directly.
+
+Optional release signing env vars: `KEYSTORE_FILE`, `KEYSTORE_PASSWORD`,
+`KEY_ALIAS`, `KEY_PASSWORD`. Without them the release APK is debug-signed so it
+can still be installed.
+
+## GitHub Actions
+
+`.github/workflows/android-release.yml` builds the APK automatically:
+
+- every push to `master` publishes the APK as a workflow artifact
+- pushing a tag like `v1.0.0` also creates a GitHub Release with the APK attached
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Configure these repository secrets:
+
+| Secret | Purpose |
+| --- | --- |
+| `ANDROID_KEYSTORE_BASE64` | Base64 of the release `.jks` |
+| `ANDROID_KEYSTORE_PASSWORD` | Keystore password |
+| `ANDROID_KEY_ALIAS` | Key alias |
+| `ANDROID_KEY_PASSWORD` | Key password |
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_KEY` | Supabase anon key |
+| `API_GATEWAY_URL` | Optional request gateway URL |
+
+Create a keystore once:
+
+```bash
+keytool -genkeypair -v -keystore release.keystore -alias showapp \
+  -keyalg RSA -keysize 2048 -validity 10000
+```
+
+On Windows PowerShell, base64-encode it into the clipboard:
+
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("release.keystore")) | Set-Clipboard
+```
