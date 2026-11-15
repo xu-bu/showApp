@@ -11,21 +11,14 @@ class ShowAppRepository(private val store: KeywordStore) {
 
     fun cachedKeywords(): List<String>? = store.get()
 
-    suspend fun loadKeywords(): List<String> {
-        val local = cachedKeywords().orEmpty()
-        val remote = try {
-            keywordsApi.fetchKeywords()
+    suspend fun loadKeywords(): List<String> =
+        try {
+            keywordsApi.fetchKeywords().also { store.set(it) }
         } catch (e: CancellationException) {
             throw e
         } catch (_: IOException) {
-            return local
+            cachedKeywords().orEmpty()
         }
-        // Keep cached keywords until the server has some, so switching away from
-        // Supabase never wipes a device that already has them.
-        val keywords = if (remote.isEmpty() && local.isNotEmpty()) local else remote
-        store.set(keywords)
-        return keywords
-    }
 
     suspend fun fetchAccessToken(): String = showStart.fetchAccessToken()
 

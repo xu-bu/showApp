@@ -16,14 +16,9 @@ export default function ManageKeywords() {
   async function loadData() {
     setLoading(true);
     try {
-      const local = storage.getItem('keyWords') ?? [];
       const remote = await getKeyWords().catch(() => null);
       if (remote === null) {
-        setKeyWords(local);
-      } else if (remote.length === 0 && local.length > 0) {
-        // First run against the new server: upload keywords cached in this browser.
-        await updateKeyWords(local).catch(() => {});
-        setKeyWords(local);
+        setKeyWords(storage.getItem('keyWords') ?? []);
       } else {
         setKeyWords(remote);
         storage.setItem('keyWords', remote);
