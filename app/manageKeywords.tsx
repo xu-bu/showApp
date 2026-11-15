@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, View, TouchableOpacity,Pressable } from 'react-native';
 import { Button, Card, Chip, Portal, Provider, Snackbar, Text, TextInput } from 'react-native-paper';
 import storage from './services/storage';
-import { getKeyWords, updateItem } from './services/supabase';
+import { getKeyWords, updateKeyWords } from './services/keywords';
 import { ManageKeywordsStyles } from './styles/styles';
 import { Trash2 } from 'lucide-react-native';
 
@@ -16,10 +16,17 @@ export default function ManageKeywords() {
   async function loadData() {
     setLoading(true);
     try {
-      if (!keyWords) {
-        const data = await getKeyWords();
-        setKeyWords(data);
-        storage.setItem('keyWords', data);
+      const local = storage.getItem('keyWords') ?? [];
+      const remote = await getKeyWords().catch(() => null);
+      if (remote === null) {
+        setKeyWords(local);
+      } else if (remote.length === 0 && local.length > 0) {
+        // First run against the new server: upload keywords cached in this browser.
+        await updateKeyWords(local).catch(() => {});
+        setKeyWords(local);
+      } else {
+        setKeyWords(remote);
+        storage.setItem('keyWords', remote);
       }
     } finally {
       setLoading(false);
@@ -57,22 +64,20 @@ function ListManager({ keyWords }: { keyWords: string[] }) {
       try {
         const updatedItems = [...items, newKeyWord];
 
-        // Update Supabase
-        await updateItem(1, {
-          keyWords: updatedItems
-        });
-
         // Update local storage
         storage.setItem('keyWords', updatedItems);
 
         // Update state (this will trigger re-render)
         setItems(updatedItems);
         setInput('');
-        setSnackbarMessage('Item added! ✨');
-        setSnackbarVisible(true);
-      } catch (error) {
-        console.error('Error adding item:', error);
-        setSnackbarMessage('Failed to add item');
+
+        try {
+          await updateKeyWords(updatedItems);
+          setSnackbarMessage('Item added! ✨');
+        } catch (error) {
+          console.error('Error syncing item:', error);
+          setSnackbarMessage('Item added, but syncing to the server failed');
+        }
         setSnackbarVisible(true);
       } finally {
         setIsProcessing(false);
@@ -89,21 +94,19 @@ function ListManager({ keyWords }: { keyWords: string[] }) {
     try {
       const updatedItems = items.filter((_, i) => i !== index);
 
-      // Update Supabase
-      await updateItem(1, {
-        keyWords: updatedItems
-      });
-
       // Update local storage
       storage.setItem('keyWords', updatedItems);
 
       // Update state (this will trigger re-render)
       setItems(updatedItems);
-      setSnackbarMessage(`"${itemName}" removed`);
-      setSnackbarVisible(true);
-    } catch (error) {
-      console.error('Error removing item:', error);
-      setSnackbarMessage('Failed to remove item');
+
+      try {
+        await updateKeyWords(updatedItems);
+        setSnackbarMessage(`"${itemName}" removed`);
+      } catch (error) {
+        console.error('Error syncing item:', error);
+        setSnackbarMessage(`"${itemName}" removed, but syncing to the server failed`);
+      }
       setSnackbarVisible(true);
     } finally {
       setIsProcessing(false);

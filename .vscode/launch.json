@@ -15,11 +15,7 @@
       "args": [
         "${file}"
       ],
-      "cwd": "${workspaceFolder}",
-      "env": {
-        "REACT_SUPABASE_URL": "https://hvwxaosrktggteueukrr.supabase.co",
-        "REACT_SUPABASE_KEY": "sb_publishable_G1WXRjtngnQrbefKSqFnXQ_s0qNyQ9R"
-      }
+      "cwd": "${workspaceFolder}"
     },
     {
       "type": "node",

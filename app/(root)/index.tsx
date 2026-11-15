@@ -3,7 +3,7 @@ import { View, Button, ActivityIndicator, Text, ScrollView, Image } from 'react-
 import { getTokenConfig, getListConfig } from '../requestConfig';
 import { injectRequestConfig } from '../injectRequestConfig';
 import { Picker } from '@react-native-picker/picker';
-import { getKeyWords } from '../services/supabase';
+import { getKeyWords } from '../services/keywords';
 import { useRouter } from 'expo-router';
 import storage from '../services/storage';
 import { request } from '../services/request';

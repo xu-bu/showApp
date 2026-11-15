@@ -65,13 +65,13 @@ class ShowAppViewModel(application: Application) : AndroidViewModel(application)
                 it.copy(loading = true, hasFetched = true, error = null, activities = emptyList())
             }
             try {
-                val keywords = repository.cachedKeywords() ?: try {
+                val keywords = try {
                     repository.loadKeywords()
                 } catch (e: CancellationException) {
                     throw e
                 } catch (_: Exception) {
-                    // Supabase may be unreachable; local keywords still make the app usable.
-                    emptyList()
+                    // The gateway may be unreachable; local keywords still make the app usable.
+                    repository.cachedKeywords().orEmpty()
                 }
                 _state.update { it.copy(keywords = keywords) }
                 if (keywords.isEmpty()) return@launch

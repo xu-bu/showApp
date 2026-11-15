@@ -17,7 +17,7 @@ Run `./deploy.sh` then check github pages
 First add env var:
 
 ```
-eas env:create --name EXPO_PUBLIC_SUPABASE_URL --value [value]
+eas env:create --name EXPO_PUBLIC_API_GATEWAY_URL --value [value]
 ```
 
 Check it: `npm run list`
@@ -40,8 +40,24 @@ To add routes, modify `_layout.tsx`
 # Native Kotlin Android app
 
 `android/` is a Jetpack Compose port of the web app: same showstart token/list
-requests (with request signing), Supabase keyword sync, city/artist filters,
-image zoom and keyword management.
+requests (with request signing), keyword sync through the gateway, city/artist
+filters, image zoom and keyword management.
+
+## Keywords API
+
+Keywords are stored in the `cloudflare-api-gateway` worker (Workers KV key
+`showapp:keywords`) instead of Supabase:
+
+- `GET /api/keywords` → `{ success: true, data: { keywords: string[] } }`
+- `PUT /api/keywords` with `{ "keywords": string[] }` replaces the list
+
+One-time setup in the gateway project:
+
+```bash
+npx wrangler login
+npx wrangler kv namespace create KEYWORDS   # paste the id into wrangler.jsonc
+npm run deploy
+```
 
 ## Build locally
 
@@ -50,12 +66,12 @@ Requires JDK 17 and Android SDK platform 36. Point Gradle at the SDK with
 
 ```bash
 cd android
-SUPABASE_URL=... SUPABASE_KEY=... ./gradlew :app:assembleRelease
+API_GATEWAY_URL=https://cloudflare-api-gateway.641706106.workers.dev ./gradlew :app:assembleRelease
 ```
 
 The APK is written to `android/app/build/outputs/apk/release/app-release.apk`.
-Set `API_GATEWAY_URL` to route requests through the same gateway as the web app;
-when empty the app calls `wap.showstart.com` directly.
+`API_GATEWAY_URL` points at the gateway used by the web app; when empty the app
+calls `wap.showstart.com` directly and keyword sync is unavailable.
 
 Optional release signing env vars: `KEYSTORE_FILE`, `KEYSTORE_PASSWORD`,
 `KEY_ALIAS`, `KEY_PASSWORD`. Without them the release APK is debug-signed so it
@@ -81,9 +97,7 @@ Configure these repository secrets:
 | `ANDROID_KEYSTORE_PASSWORD` | Keystore password |
 | `ANDROID_KEY_ALIAS` | Key alias |
 | `ANDROID_KEY_PASSWORD` | Key password |
-| `SUPABASE_URL` | Supabase project URL |
-| `SUPABASE_KEY` | Supabase anon key |
-| `API_GATEWAY_URL` | Optional request gateway URL |
+| `API_GATEWAY_URL` | Gateway URL used for showstart and keyword requests |
 
 Create a keystore once:
 

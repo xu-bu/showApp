@@ -1,8 +1,8 @@
-import { getItems,  updateItem } from '../app/services/supabase';
+import { getKeyWords } from '../app/services/keywords';
 
 async function main() {
-  const a = await getItems();
-  let b;
+  const keywords = await getKeyWords();
+  console.log(keywords);
 }
 
 main().then();

@@ -29,8 +29,6 @@ android {
         versionCode = appVersionCode
         versionName = appVersionName
 
-        buildConfigField("String", "SUPABASE_URL", buildConfigString("SUPABASE_URL"))
-        buildConfigField("String", "SUPABASE_KEY", buildConfigString("SUPABASE_KEY"))
         buildConfigField("String", "API_GATEWAY_URL", buildConfigString("API_GATEWAY_URL"))
     }
 
