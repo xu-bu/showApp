@@ -138,10 +138,10 @@ fun MainScreen(viewModel: ShowAppViewModel, onManageKeywords: () -> Unit) {
             if (state.hasFetched && !state.loading && state.error == null && filtered.isEmpty()) {
                 item {
                     Text(
-                        text = if (state.activities.isEmpty()) {
-                            "No events found."
-                        } else {
-                            "No events match the selected filters."
+                        text = when {
+                            state.keywords.isEmpty() -> "No keywords yet. Add some in Manage Keywords."
+                            state.activities.isEmpty() -> "No events found."
+                            else -> "No events match the selected filters."
                         },
                         modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
                     )

@@ -1,6 +1,7 @@
 package com.bucketland.showapp.data
 
 import com.bucketland.showapp.BuildConfig
+import kotlinx.coroutines.CancellationException
 
 class ShowAppRepository(private val store: KeywordStore) {
 
@@ -21,8 +22,16 @@ class ShowAppRepository(private val store: KeywordStore) {
     suspend fun fetchActivities(keyword: String, accessToken: String): List<ActivityData> =
         showStart.fetchActivities(keyword, accessToken)
 
-    suspend fun updateKeywords(keywords: List<String>) {
-        supabase.updateKeywords(keywords)
-        store.set(keywords)
-    }
+    fun cacheKeywords(keywords: List<String>) = store.set(keywords)
+
+    /** Returns false when Supabase is unreachable; keywords stay saved locally. */
+    suspend fun syncKeywords(keywords: List<String>): Boolean =
+        try {
+            supabase.updateKeywords(keywords)
+            true
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            false
+        }
 }

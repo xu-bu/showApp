@@ -96,7 +96,7 @@ class ShowStartClient(gatewayUrl: String) {
         val headers = buildHeaders(accessToken, bodyJson, sourcePath)
 
         // The web app proxies through a gateway to avoid browser CORS. Native code can
-        // call showstart directly, but a gateway URL is still honored when configured.
+        // call showstart directly, so fall back to that when the gateway is unreachable.
         val responseText = if (gatewayUrl.isNotBlank()) {
             val payload = buildJsonObject {
                 put("method", "post")
@@ -106,11 +106,15 @@ class ShowStartClient(gatewayUrl: String) {
                     headers.forEach { (name, value) -> put(name, value) }
                 }
             }.toString()
-            postJson(
-                url = "$gatewayUrl/api/requestHelper",
-                headers = mapOf("Content-Type" to "application/json"),
-                bodyJson = payload,
-            )
+            try {
+                postJson(
+                    url = "$gatewayUrl/api/requestHelper",
+                    headers = mapOf("Content-Type" to "application/json"),
+                    bodyJson = payload,
+                )
+            } catch (_: IOException) {
+                postJson(url, headers, bodyJson)
+            }
         } else {
             postJson(url, headers, bodyJson)
         }

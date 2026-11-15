@@ -65,9 +65,18 @@ class ShowAppViewModel(application: Application) : AndroidViewModel(application)
                 it.copy(loading = true, hasFetched = true, error = null, activities = emptyList())
             }
             try {
-                val accessToken = repository.fetchAccessToken()
-                val keywords = repository.cachedKeywords() ?: repository.loadKeywords()
+                val keywords = repository.cachedKeywords() ?: try {
+                    repository.loadKeywords()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    // Supabase may be unreachable; local keywords still make the app usable.
+                    emptyList()
+                }
                 _state.update { it.copy(keywords = keywords) }
+                if (keywords.isEmpty()) return@launch
+
+                val accessToken = repository.fetchAccessToken()
 
                 val collected = mutableListOf<ActivityData>()
                 for (chunk in keywords.chunked(CONCURRENT_REQUESTS)) {
@@ -96,9 +105,10 @@ class ShowAppViewModel(application: Application) : AndroidViewModel(application)
         _state.update { it.copy(keywordsProcessing = true) }
         return try {
             val updated = _state.value.keywords + keyword
-            repository.updateKeywords(updated)
+            repository.cacheKeywords(updated)
             _state.update { it.copy(keywords = updated) }
-            showSnackbar("Item added! \u2728")
+            val synced = repository.syncKeywords(updated)
+            showSnackbar(if (synced) "Item added! \u2728" else "Item added locally (sync failed)")
             true
         } catch (e: CancellationException) {
             throw e
@@ -120,9 +130,13 @@ class ShowAppViewModel(application: Application) : AndroidViewModel(application)
             _state.update { it.copy(keywordsProcessing = true) }
             try {
                 val updated = current.filterIndexed { i, _ -> i != index }
-                repository.updateKeywords(updated)
+                repository.cacheKeywords(updated)
                 _state.update { it.copy(keywords = updated) }
-                showSnackbar("\"$removed\" removed")
+                val synced = repository.syncKeywords(updated)
+                showSnackbar(
+                    if (synced) "\"$removed\" removed"
+                    else "\"$removed\" removed locally (sync failed)",
+                )
             } catch (e: CancellationException) {
                 throw e
             } catch (_: Exception) {
